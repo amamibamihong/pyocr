@@ -30,6 +30,7 @@ if os.name == 'nt':
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
         version = version.stdout.decode("utf-8").strip()
+        version = version.split("-")[0]
 
         with open('src/pyocr/_version.py', 'w') as fd:
             fd.write("version = '{}'\n".format(version))

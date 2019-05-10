@@ -46,6 +46,7 @@ clean:
 	rm -rf doc/build
 	rm -rf build dist *.egg-info
 	rm -rf src/pyocr/__pycache__
+	rm -f src/pyocr/_version.py
 
 install_py:
 	${PYTHON} ./setup.py install ${PIP_ARGS}

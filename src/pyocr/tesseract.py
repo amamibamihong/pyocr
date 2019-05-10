@@ -37,6 +37,7 @@ logger = logging.getLogger(__name__)
 
 g_subprocess_startup_info = None
 g_creation_flags = 0
+g_version = None
 
 __all__ = [
     'CharBoxBuilder',
@@ -421,6 +422,11 @@ def get_version():
     Exception:
         TesseractError --- Unable to run tesseract or to parse the version
     """
+    global g_version
+
+    if g_version is not None:
+        return g_version
+
     _set_environment()
 
     command = [TESSERACT_CMD, "-v"]
@@ -451,6 +457,7 @@ def get_version():
             raise TesseractError(
                 ret, ("Unable to parse Tesseract version (not a number): [%s]"
                       % (ver_string)))
+        g_version = version
         return version
     except IndexError:
         raise TesseractError(

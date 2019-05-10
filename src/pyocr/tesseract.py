@@ -159,8 +159,16 @@ def can_detect_orientation():
 
 def psm_parameter():
     """Return the psm option string depending on the Tesseract version."""
-    version = get_version()
-    return "--psm" if version[0] > 3 else "-psm"
+    try:
+        version = get_version()
+        return "--psm" if version[0] > 3 else "-psm"
+    except Exception as exc:
+        logger.warning(
+            "psm_parameter(): failed to get Tesseract version. Assuming"
+            "Tesseract >= 4 --> using option '--psm'",
+            exc_info=exc
+        )
+        return "--psm"
 
 
 def detect_orientation(image, lang=None):

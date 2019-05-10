@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import os
+import subprocess
 import sys
 from setuptools import setup
 
@@ -16,6 +18,31 @@ This may be due to an out of date pip.
 Make sure you have pip >= 9.0.1.
 """
     sys.exit(error)
+
+
+if os.name == 'nt':
+    # setuptools_scm doesn't work in MSYS2
+    setup_deps = []
+    scm_version = {}
+    if not os.path.exists('src/pyocr/_version.py'):
+        version = subprocess.run(
+            'git describe --always',
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
+        version = version.stdout.decode("utf-8").strip()
+
+        with open('src/pyocr/_version.py', 'w') as fd:
+            fd.write("# coding: utf-8\n")
+            fd.write("version = '{}'\n".format(version))
+else:
+    setup_deps = [
+        'setuptools_scm',
+        'setuptools_scm_git_archive',
+    ]
+    scm_version = {
+        'write_to': 'src/pyocr/_version.py',
+    }
+
 
 setup(
     name="pyocr",
@@ -56,11 +83,6 @@ setup(
     install_requires=[
         "Pillow",
     ],
-    setup_requires=[
-        'setuptools_scm',
-        'setuptools_scm_git_archive',
-    ],
-    use_scm_version={
-        'write_to': 'src/pyocr/_version.py',
-    },
+    setup_requires=setup_deps,
+    use_scm_version=scm_version,
 )

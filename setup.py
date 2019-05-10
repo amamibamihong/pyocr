@@ -32,8 +32,11 @@ if os.name == 'nt':
         version = version.stdout.decode("utf-8").strip()
 
         with open('src/pyocr/_version.py', 'w') as fd:
-            fd.write("# coding: utf-8\n")
             fd.write("version = '{}'\n".format(version))
+    else:
+        with open("src/pyocr/_version.py", "r") as fd:
+            version = fd.read().strip()
+            version = version.split(" ")[2][1:-1]
 else:
     setup_deps = [
         'setuptools_scm',
@@ -42,6 +45,7 @@ else:
     scm_version = {
         'write_to': 'src/pyocr/_version.py',
     }
+    version = None
 
 
 setup(
@@ -49,6 +53,7 @@ setup(
     description=("A Python wrapper for OCR engines (Tesseract, Cuneiform,"
                  " etc)"),
     keywords="tesseract cuneiform ocr",
+    version=version,
     url="https://gitlab.gnome.org/World/OpenPaperwork/pyocr",
     classifiers=[
         "Development Status :: 5 - Production/Stable",

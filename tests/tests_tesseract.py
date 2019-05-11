@@ -40,6 +40,7 @@ class TestTesseract(BaseTest):
 
     @patch("subprocess.Popen")
     def test_version_error(self, popen):
+        tesseract.g_version = None  # drop cached version
         self.stdout.wait.return_value = 2
         popen.return_value = self.stdout
         with self.assertRaises(tesseract.TesseractError) as te:
@@ -49,11 +50,13 @@ class TestTesseract(BaseTest):
 
     @patch("subprocess.Popen")
     def test_version_tesseract4(self, popen):
+        tesseract.g_version = None  # drop cached version
         popen.return_value = self.stdout
         self.assertSequenceEqual(tesseract.get_version(), (4, 0, 0))
 
     @patch("subprocess.Popen")
     def test_version_tesseract4dev(self, popen):
+        tesseract.g_version = None  # drop cached version
         message = self.message.replace(b"tesseract 4.0.0",
                                        b"tesseract 4.00.00dev2")
         self.stdout.stdout.read.return_value = message
@@ -62,6 +65,7 @@ class TestTesseract(BaseTest):
 
     @patch("subprocess.Popen")
     def test_version_tesseract4alpha(self, popen):
+        tesseract.g_version = None  # drop cached version
         message = self.message.replace(b"tesseract 4.0.0",
                                        b"tesseract 4.00.00alpha")
         self.stdout.stdout.read.return_value = message
@@ -70,6 +74,7 @@ class TestTesseract(BaseTest):
 
     @patch("subprocess.Popen")
     def test_version_tesseract3(self, popen):
+        tesseract.g_version = None  # drop cached version
         message = self.message.replace(b"tesseract 4.0.0",
                                        b"tesseract 3.05")
         self.stdout.stdout.read.return_value = message
@@ -78,6 +83,7 @@ class TestTesseract(BaseTest):
 
     @patch("subprocess.Popen")
     def test_version_tesseract3_no_minor(self, popen):
+        tesseract.g_version = None  # drop cached version
         message = self.message.replace(b"tesseract 4.0.0",
                                        b"tesseract 3.0")
         self.stdout.stdout.read.return_value = message
@@ -86,6 +92,7 @@ class TestTesseract(BaseTest):
 
     @patch("subprocess.Popen")
     def test_version_windows(self, popen):
+        tesseract.g_version = None  # drop cached version
         message = self.message.replace(b"tesseract 4.0.0",
                                        b"tesseract v4.0.0.20181030")
         self.stdout.stdout.read.return_value = message
@@ -94,6 +101,7 @@ class TestTesseract(BaseTest):
 
     @patch("subprocess.Popen")
     def test_version_error_splitting(self, popen):
+        tesseract.g_version = None  # drop cached version
         message = self.message.replace(b"tesseract 4.0.0",
                                        b"tesseract 3")
         self.stdout.stdout.read.return_value = message
@@ -106,6 +114,7 @@ class TestTesseract(BaseTest):
 
     @patch("subprocess.Popen")
     def test_version_error_nan(self, popen):
+        tesseract.g_version = None  # drop cached version
         message = self.message.replace(b"tesseract 4.0.0",
                                        b"tesseract A.B.C")
         self.stdout.stdout.read.return_value = message

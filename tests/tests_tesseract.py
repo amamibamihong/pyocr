@@ -100,6 +100,23 @@ class TestTesseract(BaseTest):
         self.assertSequenceEqual(tesseract.get_version(), (4, 0, 0))
 
     @patch("subprocess.Popen")
+    def test_version_cache(self, popen):
+        """
+        Make sure Tesseract is not called everytime we need the version.
+        We need the version *often* in the code, and calling Tesseract
+        everytime wouldn't be wise.
+        """
+        tesseract.g_version = None  # drop cached version
+
+        self.stdout.stdout.read.return_value = self.message
+        popen.return_value = self.stdout
+        self.assertSequenceEqual(tesseract.get_version(), (4, 0, 0))
+
+        self.stdout.stdout.read.return_value = "garbage"
+        popen.return_value = self.stdout
+        self.assertSequenceEqual(tesseract.get_version(), (4, 0, 0))
+
+    @patch("subprocess.Popen")
     def test_version_error_splitting(self, popen):
         tesseract.g_version = None  # drop cached version
         message = self.message.replace(b"tesseract 4.0.0",

@@ -1,3 +1,13 @@
+12/05/2019 - 0.7:
+- Drop support for Python <= 2.7
+- Fix: Make sure the builder objects can be used to parse box files
+  even if Tesseract is not installed.
+- PyOCR version is now automatically set in the module by setuptools_scm
+  instead of PyOCR's Makefile (except on Windows)
+- Tesseract: optim: keep the get_version() in memory instead of calling
+  Tesseract everytime (get_version() by psm_parameter() which is called each
+  time a box file is parsed ...)
+
 18/02/2019 - 0.6:
 - Complete rewrite of unit tests (thanks to Thomas Perret)
 - Libtesseract 4.0: Fix segfault when running orientation detection

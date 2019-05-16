@@ -41,8 +41,12 @@ class TestLibTesseract(BaseTest):
         self.assertFalse(libtesseract.is_available())
         libtess.TessVersion.assert_called_once_with()
 
-    def test_can_detect_orientation(self):
+    @patch("pyocr.libtesseract.get_available_languages")
+    def test_can_detect_orientation(self, get_available_languages):
+        get_available_languages.return_value = ['eng', 'fra', 'jpn', 'osd']
         self.assertTrue(libtesseract.can_detect_orientation())
+        get_available_languages.return_value = ['eng', 'fra', 'jpn']
+        self.assertFalse(libtesseract.can_detect_orientation())
 
     @patch("pyocr.libtesseract.tesseract_raw.g_libtesseract")
     def test_version(self, libtess):

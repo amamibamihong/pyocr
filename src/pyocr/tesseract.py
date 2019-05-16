@@ -152,10 +152,11 @@ def _set_environment():
 
 def can_detect_orientation():
     version = get_version()
+    langs = get_available_languages()
     return (
         version[0] > 3 or
         (version[0] == 3 and version[1] >= 3)
-    )
+    ) and 'osd' in langs
 
 
 def psm_parameter():

@@ -37,7 +37,8 @@ __all__ = [
 
 
 def can_detect_orientation():
-    return True
+    langs = get_available_languages()
+    return 'osd' in langs
 
 
 def detect_orientation(image, lang=None):

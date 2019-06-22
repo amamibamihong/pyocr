@@ -54,8 +54,12 @@ else:
 
 setup(
     name="pyocr",
-    description=("A Python wrapper for OCR engines (Tesseract, Cuneiform,"
-                 " etc)"),
+    description=(
+        "A Python wrapper for OCR engines (Tesseract, Cuneiform, etc)"
+    ),
+    long_description=(
+        "A Python wrapper for OCR engines (Tesseract, Cuneiform, etc)"
+    ),
     keywords="tesseract cuneiform ocr",
     version=version,
     url="https://gitlab.gnome.org/World/OpenPaperwork/pyocr",

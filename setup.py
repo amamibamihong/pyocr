@@ -22,8 +22,6 @@ Make sure you have pip >= 9.0.1.
 
 if os.name == 'nt':
     # setuptools_scm doesn't work in MSYS2
-    setup_deps = []
-    scm_version = {}
     if not os.path.exists('src/pyocr/_version.py'):
         version = subprocess.run(
             'git describe --always',
@@ -36,8 +34,11 @@ if os.name == 'nt':
             fd.write("version = '{}'\n".format(version))
     else:
         with open("src/pyocr/_version.py", "r") as fd:
-            version = fd.read().strip()
-            version = version.split(" ")[2][1:-1]
+            for line in fd.readlines():
+                if line[0] != '#':
+                    version = line.strip()
+                    version = version.split(" ")[2][1:-1]
+                    break
 else:
     setup_deps = [
         'setuptools_scm',

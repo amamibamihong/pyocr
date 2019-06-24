@@ -91,7 +91,7 @@ setup(
     },
     data_files=[],
     scripts=[],
-    zip_safe=True,
+    zip_safe=(os.name != 'nt'),
     python_requires='>=3.4',
     install_requires=[
         "Pillow",

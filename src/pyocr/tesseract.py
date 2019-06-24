@@ -120,7 +120,7 @@ def _set_environment():
     if getattr(sys, 'frozen', False):  # pragma: no cover
         # Pyinstaller support
         path = os.environ["PATH"]
-        if sys._MEIPASS in path:
+        if sys._MEIPASS in path or g_version is not None:
             # already changed
             return
 
@@ -128,15 +128,6 @@ def _set_environment():
         tessprefix = os.path.join(sys._MEIPASS, "data")
         logger.info("Running in packaged environment")
 
-        if not os.path.exists(os.path.join(tessprefix, "tessdata")):
-            logger.warning(
-                "Running from container, but no tessdata ({}) found !".format(
-                    tessprefix
-                )
-            )
-        else:
-            logger.info("TESSDATA_PREFIX set to [{}]".format(tessprefix))
-            os.environ['TESSDATA_PREFIX'] = tessprefix
         if not os.path.exists(tesspath):
             logger.warning(
                 "Running from container, but no tesseract ({}) found !".format(
@@ -148,6 +139,19 @@ def _set_environment():
             os.environ['PATH'] = (
                 tesspath + os.pathsep + os.environ['PATH']
             )
+
+        if not os.path.exists(os.path.join(tessprefix, "tessdata")):
+            logger.warning(
+                "Running from container, but no tessdata ({}) found !".format(
+                    tessprefix
+                )
+            )
+        else:
+            version = get_version(set_env=False)
+            if version[0] > 3:
+                tessprefix = os.path.join(tessprefix, "tessdata")
+            logger.info("TESSDATA_PREFIX set to [{}]".format(tessprefix))
+            os.environ['TESSDATA_PREFIX'] = tessprefix
 
 
 def can_detect_orientation():
@@ -413,7 +417,7 @@ def get_available_languages():
     return [lang for lang in langs if lang and lang[-1] != ':']
 
 
-def get_version():
+def get_version(set_env=True):
     """
     Returns Tesseract version.
 
@@ -428,7 +432,8 @@ def get_version():
     if g_version is not None:
         return g_version
 
-    _set_environment()
+    if set_env:
+        _set_environment()
 
     command = [TESSERACT_CMD, "-v"]
 

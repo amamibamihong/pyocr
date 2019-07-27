@@ -120,7 +120,7 @@ def _set_environment():
     if getattr(sys, 'frozen', False):  # pragma: no cover
         # Pyinstaller support
         path = os.environ["PATH"]
-        if sys._MEIPASS in path or g_version is not None:
+        if 'TESSDATA_PREFIX' in os.environ:
             # already changed
             return
 

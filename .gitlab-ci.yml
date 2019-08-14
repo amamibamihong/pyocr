@@ -28,7 +28,7 @@ test:
     - volatile
   <<: *apt
   script:
-    - apt-get install -y -qq python-tox
+    - apt-get install -y -qq tox
     # required for Pillow
     - apt-get install -y -qq zlib1g-dev
     - apt-get install -y -qq libjpeg-dev

@@ -1,3 +1,11 @@
+22/06/2019 - 0.7.2:
+- Fix setup.py on Windows
+
+22/06/2019 - 0.7.1:
+- tesseract.can_detect_orientation(): only returns True if 'osd' date files are
+  installed
+- setup.py: Fix installation in MSYS2
+
 12/05/2019 - 0.7:
 - Drop support for Python <= 2.7
 - Fix: Make sure the builder objects can be used to parse box files

@@ -13,6 +13,9 @@ image: debian:stable-slim
 
 
 check:
+  only:
+    - branches@World/OpenPaperwork/pyocr
+    - tags@World/OpenPaperwork/pyocr
   tags:
     - linux
     - volatile
@@ -23,6 +26,9 @@ check:
 
 
 test:
+  only:
+    - branches@World/OpenPaperwork/pyocr
+    - tags@World/OpenPaperwork/pyocr
   tags:
     - linux
     - volatile

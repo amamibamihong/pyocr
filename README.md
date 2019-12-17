@@ -296,7 +296,7 @@ Transform](https://gitlab.gnome.org/World/OpenPaperwork/libpillowfight#stroke-wi
 
 ## Contact
 
-* [Mailing-list](https://gitlab.gnome.org/World/OpenPaperwork/paperwork/wikis/Contact#mailing-list)
+* [Forum](https://forum.openpaper.work/)
 * [Bug tracker](https://gitlab.gnome.org/World/OpenPaperwork/pyocr/issues)
 
 
@@ -307,7 +307,7 @@ Transform](https://gitlab.gnome.org/World/OpenPaperwork/libpillowfight#stroke-wi
 * [Paperwork](https://gitlab.gnome.org/World/OpenPaperwork/paperwork#readme)
 
 If you know of any other applications that use Pyocr, please
-[tell us](https://gitlab.gnome.org/World/OpenPaperwork/paperwork/wikis/Contact#mailing-list) :-)
+[tell us](https://forum.openpaper.work/) :-)
 
 ## Copyright
 

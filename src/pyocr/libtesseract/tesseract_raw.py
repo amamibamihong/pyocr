@@ -28,7 +28,7 @@ if getattr(sys, 'frozen', False):  # pragma: no cover
             )
         )
     else:
-        TESSDATA_PREFIX = tessdata
+        TESSDATA_PREFIX = os.path.join(tessdata, "tessdata")
 
 
 if sys.platform[:3] == "win":  # pragma: no cover

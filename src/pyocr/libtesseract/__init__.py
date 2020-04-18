@@ -176,6 +176,56 @@ def image_to_string(image, lang=None, builder=None):
     return builder.get_output()
 
 
+def images_to_pdf(images, output_file, lang=None, input_files=["stdin"],
+                 textonly=False):
+    '''
+    Creates pdf file with embeded text based on OCR from an image
+
+    Args:
+        image: images to be converted to one pdf
+        output_file: path to the file that will be created, `.pdf` extension
+            should not be specified
+        lang: three letter language code. For available languages see
+            https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc#languages.
+            Defaults to None.
+        input_file: paths to the image files that should be beneath the text pages in
+            output pdf. If not specified (stdin, incorrect file) output pdf is
+            correct but tesseract writes some errors about not being able to
+            open the file. Defaults to stdin.
+        textonly: create pdf with only one invisible text layer. Defaults to
+            False.
+    '''
+    handle = tesseract_raw.init(lang=lang)
+    renderer = None
+    try:
+        tesseract_raw.set_page_seg_mode(
+            handle, tesseract_raw.PageSegMode.AUTO_OSD
+        )
+
+        renderer = tesseract_raw.init_pdf_renderer(
+            handle, output_file, textonly
+        )
+        assert(renderer)
+
+        tesseract_raw.begin_document(renderer, "")
+
+        if len(input_files) == 1 and len(input_files) < len(images):
+            input_files = len(images) * input_files
+
+        for image, input_file in zip(images, input_files):
+            tesseract_raw.set_image(handle, image)
+
+            tesseract_raw.set_input_name(handle, input_file)
+            tesseract_raw.recognize(handle)
+
+            tesseract_raw.add_renderer_image(handle, renderer)
+        tesseract_raw.end_document(renderer)
+    finally:
+        tesseract_raw.cleanup(handle)
+        if renderer:
+            tesseract_raw.cleanup(renderer)
+
+
 def image_to_pdf(image, output_file, lang=None, input_file="stdin",
                  textonly=False):
     '''
@@ -195,29 +245,7 @@ def image_to_pdf(image, output_file, lang=None, input_file="stdin",
         textonly: create pdf with only one invisible text layer. Defaults to
             False.
     '''
-    handle = tesseract_raw.init(lang=lang)
-    renderer = None
-    try:
-        tesseract_raw.set_image(handle, image)
-        tesseract_raw.set_page_seg_mode(
-            handle, tesseract_raw.PageSegMode.AUTO_OSD
-        )
-
-        tesseract_raw.set_input_name(handle, input_file)
-        tesseract_raw.recognize(handle)
-
-        renderer = tesseract_raw.init_pdf_renderer(
-            handle, output_file, textonly
-        )
-        assert(renderer)
-
-        tesseract_raw.begin_document(renderer, "")
-        tesseract_raw.add_renderer_image(handle, renderer)
-        tesseract_raw.end_document(renderer)
-    finally:
-        tesseract_raw.cleanup(handle)
-        if renderer:
-            tesseract_raw.cleanup(renderer)
+    images_to_pdf([image], output_file, lang, [input_file], textonly)
 
 
 def is_available():

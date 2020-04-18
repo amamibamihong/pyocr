@@ -1379,6 +1379,7 @@ class TestLibTesseractPDF(BaseTest):
 
     def setUp(self):
         self.image = Image.new(mode="RGB", size=(1, 1))
+        self.image2 = Image.new(mode="RGB", size=(1, 1))
         self.handle = randint(0, 2**32-1)
 
     @patch("pyocr.libtesseract.tesseract_raw")
@@ -1408,6 +1409,37 @@ class TestLibTesseractPDF(BaseTest):
         )
 
     @patch("pyocr.libtesseract.tesseract_raw")
+    def test_multipage_pdf(self, raw):
+        renderer = randint(0, 2 ** 32 - 1)
+        raw.init.return_value = self.handle
+        raw.init_pdf_renderer.return_value = renderer
+        libtesseract.images_to_pdf([self.image, self.image2], "output")
+
+        raw.init.assert_called_once_with(lang=None)
+        raw.set_image.assert_called_with(self.handle, self.image)
+        raw.set_image.assert_called_with(self.handle, self.image2)
+        raw.set_page_seg_mode.assert_called_once_with(
+            self.handle, raw.PageSegMode.AUTO_OSD
+        )
+        raw.set_input_name.assert_called_with(self.handle, "stdin")
+        raw.set_input_name.assert_called_with(self.handle, "stdin")
+        raw.recognize.assert_called_with(self.handle)
+        raw.recognize.assert_called_with(self.handle)
+        raw.init_pdf_renderer.assert_called_once_with(
+            self.handle, "output", False
+        )
+        raw.begin_document.assert_called_once_with(renderer, "")
+        raw.add_renderer_image.assert_called_with(self.handle,
+                                                       renderer)
+        raw.add_renderer_image.assert_called_with(self.handle,
+                                                       renderer)
+        raw.end_document.assert_called_once_with(renderer)
+        self.assertListEqual(
+            raw.cleanup.call_args_list,
+            [call(self.handle), call(renderer)]
+        )
+
+    @patch("pyocr.libtesseract.tesseract_raw")
     def test_pdf_renderer_error(self, raw):
         renderer = None
         raw.init.return_value = self.handle
@@ -1417,15 +1449,15 @@ class TestLibTesseractPDF(BaseTest):
             libtesseract.image_to_pdf(self.image, "output")
 
         raw.init.assert_called_once_with(lang=None)
-        raw.set_image.assert_called_once_with(self.handle, self.image)
         raw.set_page_seg_mode.assert_called_once_with(
             self.handle, raw.PageSegMode.AUTO_OSD
         )
-        raw.set_input_name.assert_called_once_with(self.handle, "stdin")
-        raw.recognize.assert_called_once_with(self.handle)
         raw.init_pdf_renderer.assert_called_once_with(
             self.handle, "output", False
         )
+        self.assertFalse(raw.set_image.called)
+        self.assertFalse(raw.set_input_name.called)
+        self.assertFalse(raw.recognize.called)
         self.assertFalse(raw.begin_document.called)
         self.assertFalse(raw.add_renderer_image.called)
         self.assertFalse(raw.end_document.called)

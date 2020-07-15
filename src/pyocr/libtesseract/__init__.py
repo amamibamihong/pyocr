@@ -230,9 +230,8 @@ class LibtesseractPdfBuilder(object):
 
     def set_text_only(self, text_only):
         '''
-        :param text_only: create pdf with only one invisible text layer. Defaults to
-            False.
-        :return:
+        :param text_only: create pdf with only one invisible text layer.
+        Defaults to False.
         '''
         self.text_only = text_only
         return self
@@ -247,7 +246,9 @@ class LibtesseractPdfBuilder(object):
 
     def __validate(self):
         if len(self.images) < 1:
-            raise ValueError("At least one image is required to build the pdf!")
+            raise ValueError(
+                "At least one image is required to build the pdf!"
+            )
 
         if self.output_file is None:
             raise ValueError("An output-file is required to build the pdf!")

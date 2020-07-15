@@ -1379,11 +1379,11 @@ class TestLibTesseractPDF(BaseTest):
 
     def setUp(self):
         self.image = Image.new(mode="RGB", size=(1, 1))
-        self.handle = randint(0, 2**32-1)
+        self.handle = 1234567
 
     @patch("pyocr.libtesseract.tesseract_raw")
     def test_pdf(self, raw):
-        renderer = randint(0, 2**32-1)
+        renderer = 2345671
         raw.init.return_value = self.handle
         raw.init_pdf_renderer.return_value = renderer
         libtesseract.image_to_pdf(self.image, "output")
@@ -1408,7 +1408,7 @@ class TestLibTesseractPDF(BaseTest):
 
     @patch("pyocr.libtesseract.tesseract_raw")
     def test_multipage_pdf(self, raw):
-        renderer = randint(0, 2 ** 32 - 1)
+        renderer = 2345671
         raw.init.return_value = self.handle
         raw.init_pdf_renderer.return_value = renderer
         libtesseract.LibtesseractPdfBuilder() \
@@ -1429,10 +1429,12 @@ class TestLibTesseractPDF(BaseTest):
             self.handle, "output", False
         )
         raw.begin_document.assert_called_once_with(renderer, "")
-        raw.add_renderer_image.assert_called_with(self.handle,
-                                                       renderer)
-        raw.add_renderer_image.assert_called_with(self.handle,
-                                                       renderer)
+        raw.add_renderer_image.assert_called_with(
+            self.handle, renderer
+        )
+        raw.add_renderer_image.assert_called_with(
+            self.handle, renderer
+        )
         raw.end_document.assert_called_once_with(renderer)
         self.assertListEqual(
             raw.cleanup.call_args_list,

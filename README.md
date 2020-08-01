@@ -249,11 +249,28 @@ With libtesseract >= 4, it's possible to generate a PDF from an image:
 import PIL.Image
 import pyocr
 
-pyocr.libtesseract.image_to_pdf(
-    PIL.Image.open("image.jpg"),
-    "output_filename"  # .pdf will be appended
-)
+image = PIL.Image.open("image.jpg")
 
+builder = pyocr.libtesseract.LibtesseractPdfBuilder()
+builder.add_image(image)    # multiple images are added as separate pages
+builder.set_lang("deu")     # optional
+builder.set_output_file("output_filename") # .pdf will be appended
+builder.build()
+```
+
+#### Add text layer to PDF
+
+```Python
+import pyocr
+import pdf2image
+
+images = pdf2image.convert_from_path("file.pdf", dpi=200, fmt='jpg')
+
+builder = pyocr.libtesseract.LibtesseractPdfBuilder()
+for image in images:
+    builder.add_image(image)
+builder.set_output_file("output") # .pdf will be appended
+builder.build()
 ```
 
 Beware this code hasn't been adapted to libtesseract 3 yet.

@@ -54,6 +54,12 @@ class TestTesseract(BaseTest):
         popen.return_value = self.stdout
         self.assertSequenceEqual(tesseract.get_version(), (4, 0, 0))
 
+        # stderr must be explicitely ignored when calling 'tesseract -v'.
+        # See https://gitlab.gnome.org/World/OpenPaperwork/pyocr/-/issues/118
+        popen.assert_called_once()
+        (args, kwargs) = popen.call_args
+        self.assertNotIn('stderr', kwargs)
+
     @patch("subprocess.Popen")
     def test_version_tesseract4dev(self, popen):
         tesseract.g_version = None  # drop cached version

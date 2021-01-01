@@ -1,3 +1,9 @@
+01/01/2020 - 0.8.0:
+- Replaced libtesseract.image_to_pdf() by an object-oriented API that allows
+  creating PDF with more than 1 page (thanks to Matthias Kraus).
+- Tesseract 4 + sys.frozen=True: Fix TESSDATA_PREFIX: starting with
+  Tesseract 4, the path must include tessdata/
+
 22/06/2019 - 0.7.2:
 - Fix setup.py on Windows
 

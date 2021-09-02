@@ -243,7 +243,7 @@ class TestLineBoxBuilder(BaseTest):
     def test_write_file(self):
         output_fh = StringIO()
         lines = []
-        for l in range(4):
+        for l in range(4):  # noqa: E741
             boxes = []
             for b in range(4):
                 word = "word" + str(4*l+b)
@@ -287,7 +287,7 @@ class TestLineBoxBuilder(BaseTest):
 
     def test_get_output(self):
         lines = []
-        for l in range(4):
+        for l in range(4):  # noqa: E741
             boxes = []
             for b in range(4):
                 word = "word" + str(4*l+b)

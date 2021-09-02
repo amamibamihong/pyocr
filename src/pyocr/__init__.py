@@ -13,7 +13,11 @@ See PyOCR `README.markdown` file for more information:
 
 """)
 
-from .pyocr import *  # noqa
+from .pyocr import (
+    get_available_tools,
+    TOOLS,
+    VERSION
+)
 from .error import PyocrException
 
 __all__ = [

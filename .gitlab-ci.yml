@@ -1,4 +1,5 @@
-image: debian:stable-slim
+image: debian:bullseye
+
 
 .apt: &apt
   before_script:

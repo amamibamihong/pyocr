@@ -1,3 +1,6 @@
+05/12/2021 - 0.8.1:
+- Make the dependency on setuptools_scm optional
+
 01/01/2020 - 0.8.0:
 - Replaced libtesseract.image_to_pdf() by an object-oriented API that allows
   creating PDF with more than 1 page (thanks to Matthias Kraus).

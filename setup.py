@@ -20,13 +20,13 @@ Make sure you have pip >= 9.0.1.
     sys.exit(error)
 
 
-if os.name == 'nt':
+if os.name == 'nt' or not bool(int(os.getenv("ENABLE_SETUPTOOLS_SCM", 1))):
+    # setuptools_scm doesn't work in MSYS2
     setup_deps = []
     scm_version = {}
-    # setuptools_scm doesn't work in MSYS2
     if not os.path.exists('src/pyocr/_version.py'):
         version = subprocess.run(
-            'git describe --always',
+            ['git', 'describe', '--always'],
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
         version = version.stdout.decode("utf-8").strip()

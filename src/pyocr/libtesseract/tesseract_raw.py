@@ -48,9 +48,11 @@ if sys.platform[:3] == "win":  # pragma: no cover
     ]
 else:
     libnames += [
-        "libtesseract.4.dylib",
+        "libtesseract.so.5",
         "libtesseract.so.4",
         "libtesseract.so.3",
+        "libtesseract.5.dylib",
+        "libtesseract.4.dylib",
     ]
 
 

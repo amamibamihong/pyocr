@@ -211,9 +211,10 @@ def detect_orientation(image, lang=None):
                                 cwd=tmpdir,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT)
-        proc.stdin.close()
-        original_output = proc.stdout.read()
-        proc.wait()
+        with proc:
+            proc.stdin.close()
+            original_output = proc.stdout.read()
+            proc.wait()
 
         original_output = original_output.decode("utf-8")
         original_output = original_output.strip()
@@ -300,8 +301,10 @@ def run_tesseract(input_filename, output_filename_base, cwd=None, lang=None,
     # asap or Tesseract will remain stuck when trying to write again on stderr.
     # In the end, we just have to make sure that proc.stderr.read() is called
     # before proc.wait()
-    errors = proc.stdout.read()
-    return (proc.wait(), errors)
+    with proc:
+        errors = proc.stdout.read()
+        ret = proc.wait()
+    return (ret, errors)
 
 
 def cleanup(filename):
@@ -408,10 +411,11 @@ def get_available_languages():
                             creationflags=g_creation_flags,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT)
-    langs = proc.stdout.read().decode('utf-8').splitlines(False)
-    ret = proc.wait()
-    if ret != 0:
-        raise TesseractError(ret, "unable to get languages")
+    with proc:
+        langs = proc.stdout.read().decode('utf-8').splitlines(False)
+        ret = proc.wait()
+        if ret != 0:
+            raise TesseractError(ret, "unable to get languages")
 
     return [lang for lang in langs if lang and lang[-1] != ':']
 
@@ -440,11 +444,12 @@ def get_version(set_env=True):
                             startupinfo=g_subprocess_startup_info,
                             creationflags=g_creation_flags,
                             stdout=subprocess.PIPE)
-    ver_string = proc.stdout.read()
-    ver_string = ver_string.decode('utf-8')
-    ret = proc.wait()
-    if ret not in (0, 1):
-        raise TesseractError(ret, ver_string)
+    with proc:
+        ver_string = proc.stdout.read()
+        ver_string = ver_string.decode('utf-8')
+        ret = proc.wait()
+        if ret not in (0, 1):
+            raise TesseractError(ret, ver_string)
 
     try:
         ver_string = ver_string.split(" ")[1]

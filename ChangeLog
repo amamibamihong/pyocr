@@ -1,3 +1,7 @@
+04/15/2022 - 0.8.2:
+- Add support for Tesseravt 5 + Linux
+- Fix file descriptor leak (thanks to oda)
+
 05/12/2021 - 0.8.1:
 - Make the dependency on setuptools_scm optional
 
